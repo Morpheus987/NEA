@@ -16,5 +16,18 @@ namespace NEA
         {
             InitializeComponent();
         }
+
+        public List<DataPointXY> GetPoints()
+        {
+            var points = new List<DataPointXY>();
+
+            foreach (System.Windows.Forms.DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+
+            }
+
+        }
     }
 }

@@ -9,9 +9,9 @@ namespace NEA
     public partial class first_page : Form
     {
 
-        Dictionary<Control, Rectangle> controlBounds = new Dictionary<Control, Rectangle>();
-        Size originalFormSize;
-        bool ready = false;
+        Dictionary<Control, Rectangle> controlBounds = new Dictionary<Control, Rectangle>(); // This dictionary stores a visual element of the form from the control class as the key and it's size in the rectangle data type
+        Size originalFormSize; // This variable stores the height and width of the form size in it's orignal form
+        bool ready = false; // This variable is there to ensure that the first page resize function occurs before the first page load function
 
 
         public first_page()
@@ -24,9 +24,9 @@ namespace NEA
 
         private void helpbutton_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            UserGuide guide = new UserGuide();
-            guide.Show();
+            this.Hide();  //When the help button is clicked in the first page this line hides the help form from the user
+            UserGuide guide = new UserGuide(); // A new instance of the userguide is created
+            guide.Show(); // this new instance is then displayed to the user
         }
 
         private void first_page_Load(object sender, EventArgs e)
@@ -41,18 +41,18 @@ namespace NEA
             ready = true;
         }
 
-        private void first_page_Resize(object sender, EventArgs e)
+        private void first_page_Resize(object sender, EventArgs e) // This function resizes all the features of the form relative to it when it is maximised by the user
         {
-            if (!ready) return;
+            if (!ready) return; //This fixes the error caused by the order being wrong permanently 
 
-            float xRatio = (float)this.Width / originalFormSize.Width;
-            float yRatio = (float)this.Height / originalFormSize.Height;
+            float xRatio = (float)this.Width / originalFormSize.Width; // Find the ratio of how much the width of the form has changed
+            float yRatio = (float)this.Height / originalFormSize.Height; // Finds the ratio on how much the height of the form has changed
 
-            foreach (Control c in this.Controls)
+            foreach (Control c in this.Controls) //Gets all the features of the form
             {
                 Rectangle r = controlBounds[c];
-                c.Location = new Point((int)(r.X * xRatio), (int)(r.Y * yRatio));
-                c.Size = new Size((int)(r.Width * xRatio), (int)(r.Height * yRatio));
+                c.Location = new Point((int)(r.X * xRatio), (int)(r.Y * yRatio)); // Changes the upper left corner of a tool/features of the form relative to how much the upper left corner has changed
+                c.Size = new Size((int)(r.Width * xRatio), (int)(r.Height * yRatio)); //Changes the width and height relative to how much the form has changed
             }
         }
     }
