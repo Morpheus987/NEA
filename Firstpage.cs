@@ -55,6 +55,13 @@ namespace NEA
                 c.Size = new Size((int)(r.Width * xRatio), (int)(r.Height * yRatio)); //Changes the width and height relative to how much the form has changed
             }
         }
+
+        private void Welcm_btn_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            DataInput dataInput = new DataInput();
+            dataInput.Show();
+        }
     }
 }
 
