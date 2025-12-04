@@ -30,9 +30,10 @@ namespace NEA
             {
                 if (row.IsNewRow) continue; //If the row has nothing in it this if statement ignores it
 
-                if (double.TryParse(row.Cells["Independent"].Value?.ToString(), out double x) && double.TryParse(row.Cells["Dependent"].Value?.ToString(), out double y))
+                if (double.TryParse(row.Cells["Independent"].Value?.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture,  out double x) && double.TryParse(row.Cells["Dependent"].Value?.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double y))
                 {// Converts the string input value by the user into the double data type
                     points.Add(new DataPointXY { X = x, Y = y });
+                    
                     // Stores it the DataPointXY type so it can be analysed
                 }
 
@@ -74,6 +75,25 @@ namespace NEA
             }
 
             ready = true;
+        }
+
+        private void restartbtn_Click(object sender, EventArgs e) //When the user presses this all the values in the grid are deleted
+        {
+            foreach (System.Windows.Forms.DataGridViewRow row in dataInputGrid.Rows)
+            {
+                dataInputGrid.Rows.Remove(row); 
+            }
+        }
+
+        private void dataInputGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e) //This function is a validation check to ensure numbers inputed are in exponential or normal form
+        {
+            if (e.FormattedValue == null) return;
+
+            if(!double.TryParse(e.FormattedValue.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out _))
+                {
+                MessageBox.Show("Please enter a valid number (including exponential notation)");
+                e.Cancel = true; 
+            }
         }
     }
 }
