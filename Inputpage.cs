@@ -80,25 +80,30 @@ namespace NEA
         private void restartbtn_Click(object sender, EventArgs e) //When the user presses this all the values in the grid are deleted
         {
             is_clearing = true;
-            dataInputGrid.EndEdit();
             dataInputGrid.Rows.Clear();
+            dataInputGrid.EndEdit();
             is_clearing = false;
         }
 
         private void dataInputGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e) //This function is a validation check to ensure numbers inputed are in exponential or normal form
         {
+            
+             
+
             string value = e.FormattedValue.ToString();
 
-            if(is_clearing == true) {return; }
+            if (is_clearing == true) { return; }
 
-            if (string.IsNullOrEmpty(value)) {return; }
+            if (string.IsNullOrEmpty(value)) { return; }
 
 
-            if(!double.TryParse(e.FormattedValue.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out _))
-                {
+            if (!double.TryParse(e.FormattedValue.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out _))
+            {
                 MessageBox.Show("Please enter a valid number (including exponential notation)");
-                e.Cancel = true; 
+                e.Cancel = true;
             }
+
+        
         }
     }
 }
