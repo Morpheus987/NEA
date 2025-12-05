@@ -12,10 +12,10 @@ namespace NEA
 {
     public partial class DataInput : Form
     {
-
+        private bool is_clearing = false;
         Dictionary<Control, Rectangle> controlBounds = new Dictionary<Control, Rectangle>(); // This dictionary stores a visual element of the form from the control class as the key and it's size in the rectangle data type
         Size originalFormSize; // This variable stores the height and width of the form size in it's orignal form
-        bool ready = false; // This variable is there to ensure that the first page resize function occurs before the first page load function
+        bool ready = true; // This variable is there to ensure that the first page resize function occurs before the first page load function
 
         public DataInput()
         {
@@ -79,15 +79,20 @@ namespace NEA
 
         private void restartbtn_Click(object sender, EventArgs e) //When the user presses this all the values in the grid are deleted
         {
-            foreach (System.Windows.Forms.DataGridViewRow row in dataInputGrid.Rows)
-            {
-                dataInputGrid.Rows.Remove(row); 
-            }
+            is_clearing = true;
+            dataInputGrid.EndEdit();
+            dataInputGrid.Rows.Clear();
+            is_clearing = false;
         }
 
         private void dataInputGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e) //This function is a validation check to ensure numbers inputed are in exponential or normal form
         {
-            if (e.FormattedValue == null) return;
+            string value = e.FormattedValue.ToString();
+
+            if(is_clearing == true) {return; }
+
+            if (string.IsNullOrEmpty(value)) {return; }
+
 
             if(!double.TryParse(e.FormattedValue.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out _))
                 {
