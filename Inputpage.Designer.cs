@@ -54,7 +54,7 @@
             this.dataInputGrid.RowHeadersWidth = 51;
             this.dataInputGrid.RowTemplate.Height = 24;
             this.dataInputGrid.ShowEditingIcon = false;
-            this.dataInputGrid.Size = new System.Drawing.Size(305, 306);
+            this.dataInputGrid.Size = new System.Drawing.Size(302, 306);
             this.dataInputGrid.TabIndex = 0;
             this.dataInputGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataInputGrid_CellValidating);
             // 
@@ -76,7 +76,7 @@
             // 
             this.DinputHbutton.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DinputHbutton.Location = new System.Drawing.Point(31, 19);
-            this.DinputHbutton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.DinputHbutton.Margin = new System.Windows.Forms.Padding(2);
             this.DinputHbutton.Name = "DinputHbutton";
             this.DinputHbutton.Size = new System.Drawing.Size(121, 32);
             this.DinputHbutton.TabIndex = 1;
@@ -90,7 +90,7 @@
             this.DtPageHeader.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.DtPageHeader.Font = new System.Drawing.Font("Microsoft YaHei UI", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DtPageHeader.Location = new System.Drawing.Point(317, 27);
-            this.DtPageHeader.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.DtPageHeader.Margin = new System.Windows.Forms.Padding(2);
             this.DtPageHeader.Name = "DtPageHeader";
             this.DtPageHeader.Size = new System.Drawing.Size(221, 28);
             this.DtPageHeader.TabIndex = 2;
