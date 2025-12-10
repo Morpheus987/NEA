@@ -37,10 +37,9 @@
             // 
             this.Welcm_btn.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.Welcm_btn.Font = new System.Drawing.Font("Microsoft YaHei", 15.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Welcm_btn.Location = new System.Drawing.Point(408, 391);
-            this.Welcm_btn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.Welcm_btn.Location = new System.Drawing.Point(272, 254);
             this.Welcm_btn.Name = "Welcm_btn";
-            this.Welcm_btn.Size = new System.Drawing.Size(366, 60);
+            this.Welcm_btn.Size = new System.Drawing.Size(244, 39);
             this.Welcm_btn.TabIndex = 0;
             this.Welcm_btn.Text = "Begin Processing";
             this.Welcm_btn.UseVisualStyleBackColor = false;
@@ -52,10 +51,9 @@
             this.Help_butn.CausesValidation = false;
             this.Help_butn.Font = new System.Drawing.Font("Microsoft YaHei UI", 15.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Help_butn.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Help_butn.Location = new System.Drawing.Point(408, 300);
-            this.Help_butn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.Help_butn.Location = new System.Drawing.Point(272, 195);
             this.Help_butn.Name = "Help_butn";
-            this.Help_butn.Size = new System.Drawing.Size(366, 59);
+            this.Help_butn.Size = new System.Drawing.Size(244, 38);
             this.Help_butn.TabIndex = 1;
             this.Help_butn.Text = "Help";
             this.Help_butn.UseVisualStyleBackColor = false;
@@ -68,26 +66,24 @@
             this.Program_Name.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Program_Name.Cursor = System.Windows.Forms.Cursors.SizeAll;
             this.Program_Name.Font = new System.Drawing.Font("Lucida Calligraphy", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Program_Name.Location = new System.Drawing.Point(238, 134);
-            this.Program_Name.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.Program_Name.Location = new System.Drawing.Point(159, 87);
             this.Program_Name.Multiline = true;
             this.Program_Name.Name = "Program_Name";
-            this.Program_Name.Size = new System.Drawing.Size(690, 75);
+            this.Program_Name.Size = new System.Drawing.Size(460, 49);
             this.Program_Name.TabIndex = 2;
             this.Program_Name.Text = " Visium";
             this.Program_Name.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // first_page
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.ClientSize = new System.Drawing.Size(1197, 691);
+            this.ClientSize = new System.Drawing.Size(798, 449);
             this.Controls.Add(this.Program_Name);
             this.Controls.Add(this.Help_butn);
             this.Controls.Add(this.Welcm_btn);
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "first_page";
             this.Text = " Visium";
             this.Load += new System.EventHandler(this.first_page_Load);

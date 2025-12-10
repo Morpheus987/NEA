@@ -78,6 +78,8 @@ namespace NEA
             }
 
             ready = true;
+            dataInputGrid.CausesValidation = false;
+
         }
 
         private void restartbtn_Click(object sender, EventArgs e) //When the user presses this all the values in the grid are deleted
@@ -112,5 +114,20 @@ namespace NEA
             
         
         }
+
+        private void genstatsButton_Click(object sender, EventArgs e)
+        {
+            var pts = GetPoints();
+            if (pts.Count == 0) { MessageBox.Show("No Valid Points"); return; }
+            double avgx = pts.Average(x => x.X);
+            double avgy = pts.Average(y => y.Y);
+
+            MessageBox.Show($"Average X = {avgx}\nAverage Y = {avgy}");
+
+            
+
+
+        }
     }
+    
 }

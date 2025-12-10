@@ -116,6 +116,7 @@
             this.genstatsButton.TabIndex = 4;
             this.genstatsButton.Text = "Generate Statistics";
             this.genstatsButton.UseVisualStyleBackColor = true;
+            this.genstatsButton.Click += new System.EventHandler(this.genstatsButton_Click);
             // 
             // DataInput
             // 
