@@ -9,9 +9,13 @@ namespace NEA
     public partial class first_page : Form
     {
 
-        Dictionary<Control, Rectangle> controlBounds = new Dictionary<Control, Rectangle>(); // This dictionary stores a visual element of the form from the control class as the key and it's size in the rectangle data type
-        Size originalFormSize; // This variable stores the height and width of the form size in it's orignal form
-        bool ready = false; // This variable is there to ensure that the first page resize function occurs before the first page load function
+        Dictionary<Control, Rectangle> controlBounds = new Dictionary<Control, Rectangle>(); 
+        // This dictionary stores a visual element of the form
+       // from the control class as the key and it's size in the rectangle data type
+        Size originalFormSize; 
+        // This variable stores the height and width of the form size in it's orignal form
+        bool ready = false; 
+        // This variable is there to ensure that the first page resize function occurs before the first page load function
 
 
         public first_page()
@@ -29,16 +33,16 @@ namespace NEA
             guide.Show(); // this new instance is then displayed to the user
         }
 
-        private void first_page_Load(object sender, EventArgs e)
+        private void first_page_Load(object sender, EventArgs e) // When the load function occurs the size of each element within the form is resized proportional to it
         {
-            originalFormSize = this.Size;
+            originalFormSize = this.Size; 
 
-            foreach (Control c in this.Controls)
+            foreach (Control c in this.Controls) // Loops through each element in the form 
             {
-                controlBounds[c] = new Rectangle(c.Location, c.Size);
+                controlBounds[c] = new Rectangle(c.Location, c.Size); // Each element is then resized proportional to the form
             }
 
-            ready = true;
+            ready = true; // This is a checker variable to ensure that the load function occurs before the resize function so a stack overflow error doesn't occur
         }
 
         private void first_page_Resize(object sender, EventArgs e) // This function resizes all the features of the form relative to it when it is maximised by the user
@@ -56,11 +60,11 @@ namespace NEA
             }
         }
 
-        private void Welcm_btn_Click(object sender, EventArgs e)
+        private void Welcm_btn_Click(object sender, EventArgs e) // This button takes the user to the data input page
         {
-            this.Hide();
-            DataInput dataInput = new DataInput();
-            dataInput.Show();
+            this.Hide(); // When the button is clicked this instance of the form is hidden
+            DataInput dataInput = new DataInput(); // A new instance of the data input form is created
+            dataInput.Show(); // This new instance is then shown to the user
         }
     }
 }
