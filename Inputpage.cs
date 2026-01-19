@@ -122,7 +122,7 @@ namespace NEA
             double avgx = pts.Average(x => x.X);
             double avgy = pts.Average(y => y.Y);
 
-            MessageBox.Show($"Average X = {avgx}\nAverage Y = {avgy}");
+            MessageBox.Show($"Average X = {avgx}\nAverage Y = {avgy} Test");
 
             
 
