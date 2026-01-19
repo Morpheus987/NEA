@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace NEA
 {
@@ -11,6 +12,8 @@ namespace NEA
     {
         public double X { get; set; }
         public double Y { get; set; }
+
+        public List<PointF> datapoints;
 
     }   
 
