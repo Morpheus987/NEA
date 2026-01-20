@@ -121,8 +121,12 @@ namespace NEA
             if (pts.Count == 0) { MessageBox.Show("No Valid Points"); return; }
             double avgx = pts.Average(x => x.X);
             double avgy = pts.Average(y => y.Y);
+            double maxx = pts.Max(x => x.X);
+            double minx = pts.Min(x => x.X);
+            double maxy = pts.Max(y => y.Y);
+            double miny = pts.Min(y => y.Y);
 
-            MessageBox.Show($"Average X = {avgx}\nAverage Y = {avgy} Test");
+            MessageBox.Show($"Average X = {avgx}\nAverage Y = {avgy}\nMax X {maxx} Min X {minx}\nMax Y {maxy} Min Y {miny}");
 
             
 
