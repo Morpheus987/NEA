@@ -33,7 +33,8 @@ namespace NEA
             {
                 if (row.IsNewRow) continue; //If the row has nothing in it this if statement ignores it
 
-                if (double.TryParse(row.Cells["Independent"].Value?.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture,  out double x) && double.TryParse(row.Cells["Dependent"].Value?.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double y))
+                if (double.TryParse(row.Cells["Independent"].Value?.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture,  out double x)
+                    && double.TryParse(row.Cells["Dependent"].Value?.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double y))
                 {// Converts the string input value by the user into the double data type
                     points.Add(new DataPointXY { X = x, Y = y });
                     
@@ -126,11 +127,25 @@ namespace NEA
             double maxy = pts.Max(y => y.Y);
             double miny = pts.Min(y => y.Y);
 
-            MessageBox.Show($"Average X = {avgx}\nAverage Y = {avgy}\nMax X {maxx} Min X {minx}\nMax Y {maxy} Min Y {miny}");
+            MessageBox.Show($"Average X = {avgx}\nAverage Y = {avgy}\nMax X = {maxx} Min X = {minx}\nMax Y = {maxy} Min Y = {miny}");
 
+            // Standard deviation, Variance
+
+
+        }
+
+        private void GenGButton_Click(object sender, EventArgs e)
+        {
+            var points = GetPoints();
+            if (points.Count == 0)
+            {
+                MessageBox.Show("No Valid points to generate a graph");   
+                return; 
             
+            }
 
-
+            Graph graph = new Graph();
+            graph.Show();
         }
     }
     

@@ -35,12 +35,13 @@
             this.DtPageHeader = new System.Windows.Forms.TextBox();
             this.restartbtn = new System.Windows.Forms.Button();
             this.genstatsButton = new System.Windows.Forms.Button();
+            this.GenGButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataInputGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // dataInputGrid
             // 
-            this.dataInputGrid.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.dataInputGrid.BackgroundColor = System.Drawing.SystemColors.InactiveCaption;
             this.dataInputGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataInputGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
             this.dataInputGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -76,7 +77,7 @@
             // 
             this.DinputHbutton.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DinputHbutton.Location = new System.Drawing.Point(31, 19);
-            this.DinputHbutton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.DinputHbutton.Margin = new System.Windows.Forms.Padding(2);
             this.DinputHbutton.Name = "DinputHbutton";
             this.DinputHbutton.Size = new System.Drawing.Size(121, 32);
             this.DinputHbutton.TabIndex = 1;
@@ -90,7 +91,7 @@
             this.DtPageHeader.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.DtPageHeader.Font = new System.Drawing.Font("Microsoft YaHei UI", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DtPageHeader.Location = new System.Drawing.Point(317, 27);
-            this.DtPageHeader.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.DtPageHeader.Margin = new System.Windows.Forms.Padding(2);
             this.DtPageHeader.Name = "DtPageHeader";
             this.DtPageHeader.Size = new System.Drawing.Size(221, 28);
             this.DtPageHeader.TabIndex = 2;
@@ -118,19 +119,29 @@
             this.genstatsButton.UseVisualStyleBackColor = true;
             this.genstatsButton.Click += new System.EventHandler(this.genstatsButton_Click);
             // 
+            // GenGButton
+            // 
+            this.GenGButton.Location = new System.Drawing.Point(531, 359);
+            this.GenGButton.Name = "GenGButton";
+            this.GenGButton.Size = new System.Drawing.Size(144, 23);
+            this.GenGButton.TabIndex = 5;
+            this.GenGButton.Text = "Generate Graph";
+            this.GenGButton.UseVisualStyleBackColor = true;
+            this.GenGButton.Click += new System.EventHandler(this.GenGButton_Click);
+            // 
             // DataInput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.GenGButton);
             this.Controls.Add(this.genstatsButton);
             this.Controls.Add(this.restartbtn);
             this.Controls.Add(this.DtPageHeader);
             this.Controls.Add(this.DinputHbutton);
             this.Controls.Add(this.dataInputGrid);
             this.Name = "DataInput";
-            this.Text = "DataInput";
             this.Load += new System.EventHandler(this.DataInput_Load);
             this.Resize += new System.EventHandler(this.DataInput_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.dataInputGrid)).EndInit();
@@ -148,5 +159,6 @@
         private System.Windows.Forms.TextBox DtPageHeader;
         private System.Windows.Forms.Button restartbtn;
         private System.Windows.Forms.Button genstatsButton;
+        private System.Windows.Forms.Button GenGButton;
     }
 }
