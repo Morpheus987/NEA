@@ -136,6 +136,7 @@ namespace NEA
 
         private void GenGButton_Click(object sender, EventArgs e)
         {
+            
             var points = GetPoints();
             if (points.Count == 0)
             {
@@ -144,8 +145,22 @@ namespace NEA
             
             }
 
-            Graph graph = new Graph();
-            graph.Show();
+            int n = points.Count;
+            double[] xvalues = new double[n];
+            double[] yvalues = new double[n];           
+            double sumx = points.Sum(x => x.X);
+            double sumy = points.Sum(y => y.Y);
+            double sumxy = 0;
+            double sumx2 = 0;
+            for (int i = 0; i < n; i++)
+            {
+                sumx2 += points[i].X * points[i].X;
+                sumxy += points[i].X * points[i].Y;
+
+            }
+
+            Console.WriteLine(sumxy + " " + sumx2);
+
         }
     }
     
