@@ -159,7 +159,9 @@ namespace NEA
 
             }
 
-            Console.WriteLine(sumxy + " " + sumx2);
+            //Console.WriteLine(sumxy + " " + sumx2);
+
+            double slope = (n*sumxy - (sumx * sumy)) / (n* sumx2 -  (sumx * sumx));
 
         }
     }
