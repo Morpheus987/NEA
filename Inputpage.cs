@@ -136,32 +136,47 @@ namespace NEA
 
         private void GenGButton_Click(object sender, EventArgs e)
         {
-            
-            var points = GetPoints();
-            if (points.Count == 0)
+            var pts = GetPoints();
+            List<double> xValues = new List<double>();
+            List<double> yValues = new List<double>();
+
+            // if (pts.Count == 0) { MessageBox.Show("Can't Generate Graph no Valid Points"); return; }
+
+            foreach (DataPointXY point in pts)
             {
-                MessageBox.Show("No Valid points to generate a graph");   
-                return; 
-            
+                xValues.Add(point.X);
+                yValues.Add(point.Y);
             }
 
-            int n = points.Count;
-            double[] xvalues = new double[n];
-            double[] yvalues = new double[n];           
-            double sumx = points.Sum(x => x.X);
-            double sumy = points.Sum(y => y.Y);
-            double sumxy = 0;
-            double sumx2 = 0;
-            for (int i = 0; i < n; i++)
-            {
-                sumx2 += points[i].X * points[i].X;
-                sumxy += points[i].X * points[i].Y;
 
+            if (xValues.Count >= 2)
+            {
+                GraphForm graphForm = new GraphForm(xValues, yValues);
+                graphForm.Show();
             }
 
-            //Console.WriteLine(sumxy + " " + sumx2);
+            else
+            {
+                MessageBox.Show("Please enter at least 2 datapoints");
+            }
 
-            double slope = (n*sumxy - (sumx * sumy)) / (n* sumx2 -  (sumx * sumx));
+
+
+
+        }
+
+        private void panelGraph_paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            g.Clear(Color.White); // Makes the background of the graph white
+
+            Pen axisPen = new Pen(Color.Black, 2); // The colour of the axis will be black
+            Pen pointPen = new Pen(Color.Blue, 2); // The colour of the points will be blue
+            Pen linePen = new Pen(Color.Red, 2); // The colour of the lobf is red
+
+            
+
+
 
         }
     }
