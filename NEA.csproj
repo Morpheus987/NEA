@@ -76,6 +76,9 @@
     <EmbeddedResource Include="Firstpage.resx">
       <DependentUpon>Firstpage.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GraphForm.resx">
+      <DependentUpon>GraphForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Helppage.resx">
       <DependentUpon>Helppage.cs</DependentUpon>
     </EmbeddedResource>
