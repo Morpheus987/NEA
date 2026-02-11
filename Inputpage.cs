@@ -17,9 +17,6 @@ namespace NEA
         Size originalFormSize; // This variable stores the height and width of the form size in it's orignal form
         bool ready = true; // This variable is there to ensure that the first page resize function occurs before the first page load function
         
-
-
-
         public DataInput()
         {
             InitializeComponent();
@@ -129,7 +126,7 @@ namespace NEA
 
             MessageBox.Show($"Average X = {avgx}\nAverage Y = {avgy}\nMax X = {maxx} Min X = {minx}\nMax Y = {maxy} Min Y = {miny}");
 
-            // Standard deviation, Variance
+            
 
 
         }
