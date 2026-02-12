@@ -77,6 +77,18 @@ namespace NEA
 
             ready = true;
             dataInputGrid.CausesValidation = false; //Ensures that the validation event doesn't occur as the page is loaded so a stack overflow error doesn't occur
+            var testdata = new List<DataPointXY>();
+            for (int i = 1; i < 5; i++)
+            {
+                int y = 2 * i;
+                testdata.Add(new DataPointXY {X = i, Y = y});
+            }
+            foreach (var p in testdata)
+            {
+                dataInputGrid.Rows.Add(p.X, p.Y);
+            }
+            
+            
 
         }
 

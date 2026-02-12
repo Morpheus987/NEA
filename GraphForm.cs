@@ -94,7 +94,7 @@ namespace NEA
             Pen axisPen = new Pen(Color.Black, 2); // The colour of the axis will be black
             Pen pointPen = new Pen(Color.Blue, 2); // The colour of the points will be blue
             Pen linePen = new Pen(Color.Red, 2); // The colour of the lobf is red
-
+            
 
 
             g.DrawLine(axisPen, 50, h - 50, w - 30, h - 50); // x-axis
@@ -107,6 +107,8 @@ namespace NEA
             {
                 int px = 50 + (int)(xValues[i] / maxX * (w - 100));
                 int py = h - 50 - (int)(yValues[i] / maxY * (h - 100));
+
+                g.DrawEllipse(pointPen, px, py, 2, 2);
             }
 
             
