@@ -24,9 +24,9 @@ namespace NEA
 
         public List<DataPointXY> GetPoints()  //Retrieves the data from the datagrid in the input page
         {
-            var points = new List<DataPointXY>();
+            var points = new List<DataPointXY>(); // Creates a list which stores type 'DataPointXY' a created class
 
-            foreach (System.Windows.Forms.DataGridViewRow row in dataInputGrid.Rows)
+            foreach (System.Windows.Forms.DataGridViewRow row in dataInputGrid.Rows) //For loops iterates through every row
             {
                 if (row.IsNewRow) continue; //If the row has nothing in it this if statement ignores it
 
@@ -59,14 +59,14 @@ namespace NEA
             }
         }
 
-        private void DinputHbutton_Click(object sender, EventArgs e)
+        private void DinputHbutton_Click(object sender, EventArgs e) // Home navigation button
         {
-            this.Hide();
-            first_page Home_page = new first_page();
-            Home_page.Show();
+            this.Hide(); // Hides the form which is currently open
+            first_page Home_page = new first_page(); // Creates a new instance of the first page
+            Home_page.Show(); // Shows this new instance
         }
 
-        private void DataInput_Load(object sender, EventArgs e)
+        private void DataInput_Load(object sender, EventArgs e) 
         {
             originalFormSize = this.Size;
 
@@ -76,20 +76,20 @@ namespace NEA
             }
 
             ready = true;
-            dataInputGrid.CausesValidation = false;
+            dataInputGrid.CausesValidation = false; //Ensures that the validation event doesn't occur as the page is loaded so a stack overflow error doesn't occur
 
         }
 
         private void restartbtn_Click(object sender, EventArgs e) //When the user presses this all the values in the grid are deleted
         {
-            dataInputGrid.CausesValidation = false;
-            restartbtn.CausesValidation = false;
+            dataInputGrid.CausesValidation = false; // Stops this validation from happening
+            restartbtn.CausesValidation = false; // Stops this also
 
 
-            is_clearing = true;
-            dataInputGrid.EndEdit();
-            dataInputGrid.Rows.Clear();
-            is_clearing = false;
+            is_clearing = true; // Checker variable used with the validation event to ensure it doesn't happen when the restart button is clicked
+            dataInputGrid.EndEdit(); // Ends any other operation happening on the grid
+            dataInputGrid.Rows.Clear(); // Clears all the rows in the grid after the button is pressed
+            is_clearing = false; // Once the restart button clears the contents of the grid validation can continue
             
         }
 
@@ -97,17 +97,17 @@ namespace NEA
         {
             
 
-            string value = e.FormattedValue.ToString();
+            string value = e.FormattedValue.ToString(); // Stores the value that needs to be validated in this variable
 
-            if (is_clearing == true) { return; }
+            if (is_clearing == true) { return; } //If the restart button occurs the event doesn't
 
-            if (string.IsNullOrEmpty(value)) { return; }
+            if (string.IsNullOrEmpty(value)) { return; } // If there is nothing in the grpah return
 
              
             if (!double.TryParse(e.FormattedValue.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out _))
             {
-                    MessageBox.Show("Please enter a valid number (including exponential notation)");
-                    e.Cancel = true;
+                    MessageBox.Show("Please enter a valid number (including exponential notation)"); // If numbers are not inputted into exponential format then this message appears
+                    e.Cancel = true; // Cancels the cell validating event after the message is produced
             }
             
         
@@ -115,18 +115,18 @@ namespace NEA
 
         private void genstatsButton_Click(object sender, EventArgs e)
         {
-            var pts = GetPoints();
-            if (pts.Count == 0) { MessageBox.Show("No Valid Points"); return; }
-            double avgx = pts.Average(x => x.X);
-            double avgy = pts.Average(y => y.Y);
-            double maxx = pts.Max(x => x.X);
-            double minx = pts.Min(x => x.X);
-            double maxy = pts.Max(y => y.Y);
-            double miny = pts.Min(y => y.Y);
+            var pts = GetPoints(); // Uses the get points method to read the data
+            if (pts.Count == 0) { MessageBox.Show("No Valid Points"); return; } // If no points are entered than the message appears
+            double avgx = pts.Average(x => x.X); //Finds the mean of the x values
+            double avgy = pts.Average(y => y.Y); //Finds the mean of the y values
+            double maxx = pts.Max(x => x.X); // Finds the maximum x value
+            double minx = pts.Min(x => x.X); // Finds the minimum x value
+            double maxy = pts.Max(y => y.Y); // Finds the maximum y value
+            double miny = pts.Min(y => y.Y); // Finds the minimum y value
 
             MessageBox.Show($"Average X = {avgx}\nAverage Y = {avgy}\nMax X = {maxx} Min X = {minx}\nMax Y = {maxy} Min Y = {miny}");
 
-            
+            // Displays all the results
 
 
         }
@@ -134,27 +134,27 @@ namespace NEA
         private void GenGButton_Click(object sender, EventArgs e)
         {
             var pts = GetPoints();
-            List<double> xValues = new List<double>();
-            List<double> yValues = new List<double>();
+            List<double> xValues = new List<double>(); // Creates a list of x values
+            List<double> yValues = new List<double>(); // Crreates a list of y values
 
             // if (pts.Count == 0) { MessageBox.Show("Can't Generate Graph no Valid Points"); return; }
 
             foreach (DataPointXY point in pts)
             {
-                xValues.Add(point.X);
-                yValues.Add(point.Y);
+                xValues.Add(point.X); // Adds each x point to the list
+                yValues.Add(point.Y); // Adds each y point to the list
             }
 
 
-            if (xValues.Count >= 2)
+            if (xValues.Count >= 2) // If there is a sufficent amount of points a graph is generated 
             {
-                GraphForm graphForm = new GraphForm(xValues, yValues);
-                graphForm.Show();
+                GraphForm graphForm = new GraphForm(xValues, yValues); // A new instance of the graph form is created
+                graphForm.Show(); // It is then shown 
             }
 
             else
             {
-                MessageBox.Show("Please enter at least 2 datapoints");
+                MessageBox.Show("Please enter at least 2 datapoints"); // Must enter at least 2 datapoints for the graph to be generated
             }
 
 
@@ -162,20 +162,7 @@ namespace NEA
 
         }
 
-        private void panelGraph_paint(object sender, PaintEventArgs e)
-        {
-            Graphics g = e.Graphics;
-            g.Clear(Color.White); // Makes the background of the graph white
-
-            Pen axisPen = new Pen(Color.Black, 2); // The colour of the axis will be black
-            Pen pointPen = new Pen(Color.Blue, 2); // The colour of the points will be blue
-            Pen linePen = new Pen(Color.Red, 2); // The colour of the lobf is red
-
-            
-
-
-
-        }
+        
     }
     
 }

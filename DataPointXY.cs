@@ -10,10 +10,11 @@ namespace NEA
 {
     public class DataPointXY
     {
-        public double X { get; set; }
-        public double Y { get; set; }
+        public double X { get; set; } // Getters and setters for the x values
+        public double Y { get; set; } // Getters and setters for the y values
 
-        public List<PointF> datapoints;
+        public List<PointF> datapoints; // point F types represents a pair of floating point
+                                        // x and y corrdinates 
 
     }   
 
