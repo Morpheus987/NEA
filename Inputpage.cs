@@ -146,21 +146,13 @@ namespace NEA
         private void GenGButton_Click(object sender, EventArgs e)
         {
             var pts = GetPoints();
-            List<double> xValues = new List<double>(); // Creates a list of x values
-            List<double> yValues = new List<double>(); // Crreates a list of y values
 
-            // if (pts.Count == 0) { MessageBox.Show("Can't Generate Graph no Valid Points"); return; }
+         
 
-            foreach (DataPointXY point in pts)
+
+            if (pts.Count >= 2) // If there is a sufficent amount of points a graph is generated 
             {
-                xValues.Add(point.X); // Adds each x point to the list
-                yValues.Add(point.Y); // Adds each y point to the list
-            }
-
-
-            if (xValues.Count >= 2) // If there is a sufficent amount of points a graph is generated 
-            {
-                GraphForm graphForm = new GraphForm(xValues, yValues); // A new instance of the graph form is created
+                GraphForm graphForm = new GraphForm(pts); // A new instance of the graph form is created
                 graphForm.Show(); // It is then shown 
             }
 

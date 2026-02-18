@@ -14,60 +14,32 @@ namespace NEA
 {
     public partial class GraphForm : Form
     {
-        private List<double> xValues;
-        private List<double> yValues;
-        private int w;
-        private int h;
+        private List<DataPointXY> _points; // New list which stores the inputted values of the user
+        
         Dictionary<Control, Rectangle> controlBounds = new Dictionary<Control, Rectangle>();
         Size originalFormSize;
         bool ready = false;
+        double slope, intercept;
         
 
-
-        double slope, intercept;
-
-        public GraphForm(List<double> xValues, List<double> yValues)
+        public GraphForm(List<DataPointXY> points)
         {
             InitializeComponent();
-            Rectangle formbounds = this.Bounds;
 
-            int left = formbounds.Left;
-            int top = formbounds.Top;
-            int right = formbounds.Right;
-            int bottom = formbounds.Bottom;
-            // The panel class is used as it you can group and control all the variables as a single unit
-
-            this.xValues = xValues;
-            this.yValues = yValues;  
-
-            // These variables are all taken for linear regression
-
-            int n = xValues.Count; // Stores the number of data points in this variable
-            double sumx = xValues.Sum(); // Finds the sum of the x values
-            double sumy = yValues.Sum(); // Finds the sum of the y values
-            double sumxy = 0; // Stores the sum of (x*y) for all datapoints
-            double sumx2 = 0; // Stores the sum of x**2 
-            for (int i = 0; i < n; i++)  // Loops through all the data points
-            {
-                sumxy += xValues[i] * yValues[i];  // Finds the sum of (x*y) for all datapoints
-                sumx2 += xValues[i] * xValues[i];  // Finds the sum of x**2
-
-            }
-            // Linear regression
-            // LOBF (Line of best fit)
-            slope = (n * sumxy - (sumx * sumy)) / (n * sumx2 - (sumx * sumx)); //Gradient of LOBF formula used to calculate from linear regression
-            intercept = (sumy - slope * sumx) / n; // Intercept of the LOBF
-            // Resizing event I implemented in each form it doesn't do much in this form as the panel isn't part of the controls
+            _points = points; // Stores the inputted values of the user in the new list
+            _points = _points.OrderBy(p => p.X).ToList(); // These values are then ordered by size
+            PlotGraph(); // The plotgraph function is called 
+            
             originalFormSize = this.Size;
-            foreach (Control c in this.Controls) 
+            foreach (Control c in this.Controls)  // Resize function
             {
                 controlBounds[c] = new Rectangle(c.Location, c.Size); 
             }
-            ready = true;
+            ready = true; 
 
         }
 
-        private void GraphForm_Resize(object sender, EventArgs e)
+        private void GraphForm_Resize(object sender, EventArgs e) // Resize function used throughout the program
         {
             if (!ready) return;
             float xRatio = (float)this.Width / originalFormSize.Width;
@@ -80,7 +52,61 @@ namespace NEA
             }
         }
 
-        
+        private (double m, double c) LinearRegression(List<DataPointXY> points)
+        {
+            int n = points.Count;
+            double sumx = points.Sum(p => p.X);
+            double sumy = points.Sum(p => p.Y);
+            double sumxy = 0;
+            double sumx2 = 0;
+            for (int i = 0; i < n; i++)
+            {
+                sumxy += points[i].X * points[i].Y;
+                sumx2 += points[i].X * points[i].X;
+            }
+
+            slope = (n * sumxy - sumx * sumy) / (n * sumx2 - sumx * sumx);
+            intercept = (sumy - slope * sumx) / n;
+            return (slope, intercept);
+            
+
+        }
+
+
+
+        private void PlotGraph() // This function generates a graph from the inputted data values
+        {
+            chart1.Series.Clear();// Clears what is already on the chart
+
+            Series series = new Series("X vs Y"); // Creates a new instance of the series class
+            series.ChartType = SeriesChartType.Line; // Line graph
+            series.BorderWidth = 2; // Determines the width between points
+            series.MarkerStyle = MarkerStyle.Circle; 
+            series.MarkerSize = 8; // Adds red dots to signify where the dots are
+            series.MarkerColor = System.Drawing.Color.Red;
+            
+
+            foreach (var p in _points)
+            {
+                
+                series.Points.AddXY(p.X, p.Y);  // Adds each point in the list to the series
+            }
+
+            chart1.Series.Add(series); // Adds the series to chart which is a collection of series objects
+
+            chart1.ChartAreas[0].AxisX.Title = "X";
+            chart1.ChartAreas[0].AxisY.Title = "Y";
+            chart1.ChartAreas[0].RecalculateAxesScale(); // Adjusts the scales if data is changed
+            
+
+            var area = chart1.ChartAreas[0];
+            area.AxisX.MajorGrid.Enabled = false; // Gets rid of the gridlines of the x-axis
+            area.AxisY.MajorGrid.Enabled = false; // Gets rid of the gridlines of the y-axis
+
+
+        }
+
+
 
     }
 }
