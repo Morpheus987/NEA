@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace NEA
 {
@@ -40,7 +41,7 @@ namespace NEA
 
             }
 
-            return points;
+            return points; //Returns the list retrieved from the table
 
         }
 
@@ -77,19 +78,7 @@ namespace NEA
 
             ready = true;
             dataInputGrid.CausesValidation = false; //Ensures that the validation event doesn't occur as the page is loaded so a stack overflow error doesn't occur
-            var testdata = new List<DataPointXY>();
-            for (int i = 1; i < 5; i++)
-            {
-                int y = 2 * i;
-                testdata.Add(new DataPointXY {X = i, Y = y});
-            }
-            foreach (var p in testdata)
-            {
-                dataInputGrid.Rows.Add(p.X, p.Y);
-            }
-            
-            
-
+        
         }
 
         private void restartbtn_Click(object sender, EventArgs e) //When the user presses this all the values in the grid are deleted
@@ -143,17 +132,57 @@ namespace NEA
 
         }
 
+
+        private List<DataPointXY> CleanData() //This method cleans the data
+        {
+            var _points = GetPoints(); // Retrieves the data from the grid    
+            _points = _points .Where(p =>!double.IsNaN(p.X) && !double.IsNaN(p.Y) && !double.IsInfinity(p.X) &&!double.IsInfinity(p.Y)).ToList();
+            //The line above removes any x and y values if they are either not a number or a number representing either positive or negative infinity
+             _points = _points.Distinct().ToList(); //This line removes any duplicated points
+
+            //This section removes outliers using the IQR Method if there are more than 4 points
+            if (_points.Count >= 4)
+            {
+                var yValues = _points.Select(p => p.Y).OrderBy(y => y).ToList(); //Orders the y values
+
+                double q1 = yValues[yValues.Count / 4]; //Finds the lower quartile
+                double q3 = yValues[(yValues.Count * 3) / 4]; //Finds the upper quartile
+                double iqr = q3 - q1; //Finds the inter quartile range
+
+                double lowerBound = q1 - 1.5 * iqr; //Anything less than this value is an outlier
+                double upperBound = q3 + 1.5 * iqr; //Anything more than this value is an outlier
+
+                _points = _points .Where(p => p.Y >= lowerBound && p.Y <= upperBound).ToList(); //Removes the outliers
+            }
+
+            
+            _points = _points.OrderBy(p => p.X).ToList(); //The line sorts the values in order
+
+            return _points; //Returns the cleaned list
+        }
+
+
+
         private void GenGButton_Click(object sender, EventArgs e)
         {
-            var pts = GetPoints();
-
-         
-
+            var pts = GetPoints(); // Retrieves the points
 
             if (pts.Count >= 2) // If there is a sufficent amount of points a graph is generated 
             {
-                GraphForm graphForm = new GraphForm(pts); // A new instance of the graph form is created
-                graphForm.Show(); // It is then shown 
+                var result = MessageBox.Show(  "Do you want to clean the data before generating the graph?","Clean Data?",       MessageBoxButtons.YesNo,     MessageBoxIcon.Question);
+                //Provides a yes or no message box asking the user if they want the data to be cleaned
+                if (result == DialogResult.Yes) //If the user clicks yes
+                {
+                    var points = CleanData(); //Data is cleaned using the CleanData() method
+                    GraphForm graph = new GraphForm(points); //The graph is generated with the cleaned points
+                    graph.Show();
+                }
+                else //If no data is not cleaned and a graph is generated
+                {
+                    
+                    GraphForm graph = new GraphForm(pts);
+                    graph.Show();
+                }
             }
 
             else
@@ -165,6 +194,8 @@ namespace NEA
 
 
         }
+
+
 
         
     }
