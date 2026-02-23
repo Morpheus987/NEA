@@ -84,6 +84,7 @@ namespace NEA
             comboEditOptions.Items.Add("Change Y Axis Title");
             comboEditOptions.Items.Add("Change Background Colour");
             comboEditOptions.Items.Add("Change Regression Line Colour");
+            comboEditOptions.Items.Add("Change Point Colour");
 
             comboEditOptions.SelectedIndex = 0; //Defaults to showing the first option
 
@@ -107,6 +108,26 @@ namespace NEA
         {
             string selectedOption = comboEditOptions.SelectedItem.ToString();
 
+            int maxDegree = 3; // linear, quadratic, cubic
+
+            double bestR2 = double.MinValue;
+            double[] bestCoeffs = null;
+            int bestDegree = 1;
+
+            for (int d = 1; d <= maxDegree; d++)
+            {
+                var coeffs = PolynomialRegression(_points, d);
+                double r2 = CalculateRSquared(_points, coeffs);
+
+                if (r2 > bestR2)
+                {
+                    bestR2 = r2;
+                    bestCoeffs = coeffs;
+                    bestDegree = d;
+                }
+            }
+
+
             switch (selectedOption) // I used a switch case for each option in the combo box
             {
                 case "Change X Axis Title":
@@ -127,7 +148,13 @@ namespace NEA
                 case "Change Regression Line Colour":
                     if (colorDialog1.ShowDialog() == DialogResult.OK)
                     {
-                        chart1.Series["Regression"].Color = colorDialog1.Color; //The regression line colour is changed
+                        chart1.Series[$"Degree {bestDegree}"].Color = colorDialog1.Color; //The regression line colour is changed
+                    }
+                    break;
+                case "Change Point Colour":
+                    if (colorDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        chart1.Series["Data"].MarkerColor = colorDialog1.Color;
                     }
                     break;
             }
@@ -237,8 +264,8 @@ namespace NEA
                 area.AxisX.Minimum = Math.Floor(_points.Min(p => p.X));
                 area.AxisX.Maximum = Math.Ceiling(_points.Max(p => p.X));
 
-                area.AxisX.Interval = 5;
-                area.AxisX.LabelStyle.Format = "0";
+              //  area.AxisX.Interval = 5;
+               // area.AxisX.LabelStyle.Format = "0";
 
                 MessageBox.Show($"Best model: Degree {bestDegree}\nR² = {bestR2:F4}");
             }
