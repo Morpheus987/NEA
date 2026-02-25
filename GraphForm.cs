@@ -37,8 +37,8 @@ namespace NEA
             }
             ready = true;
 
-            var (m, intercept) = LinearRegression(_points); // Applies the linear regression algorithm on the data
-            labelEquation.Text = ($"y = {m:F3}x + {intercept:F3}"); //Displays the linear equation produced
+        //    var (m, intercept) = LinearRegression(_points); // Applies the linear regression algorithm on the data
+        //    labelEquation.Text = ($"y = {m:F3}x + {intercept:F3}"); //Displays the linear equation produced
 
         }
 
@@ -77,7 +77,7 @@ namespace NEA
 
         private void GraphForm_Load(object sender, EventArgs e)
         {
-            chart1.Cursor = Cursors.Cross; //Changes the cursor to a cross so it is easier for the user to pinpoints parts of the graph
+            chart1.Cursor = Cursors.Hand; //Changes the cursor to a cross so it is easier for the user to pinpoints parts of the graph
             chart1.GetToolTipText += chart1_GetToolTipText; 
             //Adds all these graph editing options to the combo box
             comboEditOptions.Items.Add("Change X Axis Title"); 
