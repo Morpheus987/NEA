@@ -239,7 +239,7 @@ namespace NEA
                 Series bestSeries = new Series($"Degree {bestDegree}");
                 bestSeries.ChartType = SeriesChartType.Line;
                 bestSeries.BorderWidth = 2;
-                bestSeries.Color = Color.Green;
+                bestSeries.Color = Color.Black;
 
                 double minX = _points.Min(p => p.X);
                 double maxX = _points.Max(p => p.X);

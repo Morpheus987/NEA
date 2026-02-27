@@ -81,6 +81,7 @@ namespace NEA
         
         }
 
+
         private void restartbtn_Click(object sender, EventArgs e) //When the user presses this all the values in the grid are deleted
         {
             dataInputGrid.CausesValidation = false; // Stops this validation from happening
@@ -94,9 +95,9 @@ namespace NEA
             
         }
 
-        private void dataInputGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e) //This function is a validation check to ensure numbers inputed are in exponential or normal form
+        private void dataInputGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e) 
         {
-            
+            //This function is a validation check to ensure numbers inputed in standard form or normal
 
             string value = e.FormattedValue.ToString(); // Stores the value that needs to be validated in this variable
 
@@ -107,7 +108,7 @@ namespace NEA
              
             if (!double.TryParse(e.FormattedValue.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out _))
             {
-                    MessageBox.Show("Please enter a valid number (including exponential notation)"); // If numbers are not inputted into exponential format then this message appears
+                    MessageBox.Show("Please enter a valid number (including standard notation)"); // If numbers are not inputted into exponential format then this message appears
                     e.Cancel = true; // Cancels the cell validating event after the message is produced
             }
             
@@ -124,6 +125,7 @@ namespace NEA
             double minx = pts.Min(x => x.X); // Finds the minimum x value
             double maxy = pts.Max(y => y.Y); // Finds the maximum y value
             double miny = pts.Min(y => y.Y); // Finds the minimum y value
+
 
             MessageBox.Show($"Average X = {avgx}\nAverage Y = {avgy}\nMax X = {maxx} Min X = {minx}\nMax Y = {maxy} Min Y = {miny}");
 
