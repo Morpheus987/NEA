@@ -137,10 +137,8 @@ namespace NEA
 
         private List<DataPointXY> CleanData() //This method cleans the data
         {
-            var _points = GetPoints(); // Retrieves the data from the grid    
-            _points = _points .Where(p =>!double.IsNaN(p.X) && !double.IsNaN(p.Y) && !double.IsInfinity(p.X) &&!double.IsInfinity(p.Y)).ToList();
-            //The line above removes any x and y values if they are either not a number or a number representing either positive or negative infinity
-             _points = _points.Distinct().ToList(); //This line removes any duplicated points
+            var _points = GetPoints(); // Retrieves the data from the grid
+            _points = _points.Distinct().ToList(); //This line removes any duplicated points
 
             //This section removes outliers using the IQR Method if there are more than 4 points
             if (_points.Count >= 4)
@@ -157,9 +155,7 @@ namespace NEA
                 _points = _points .Where(p => p.Y >= lowerBound && p.Y <= upperBound).ToList(); //Removes the outliers
             }
 
-            
             _points = _points.OrderBy(p => p.X).ToList(); //The line sorts the values in order
-
             return _points; //Returns the cleaned list
         }
 
@@ -171,25 +167,24 @@ namespace NEA
 
             if (pts.Count >= 2) // If there is a sufficent amount of points a graph is generated 
             {
-                var result = MessageBox.Show(  "Do you want to clean the data before generating the graph?","Clean Data?",       MessageBoxButtons.YesNo,     MessageBoxIcon.Question);
+                var result = MessageBox.Show(  "Do you want to clean the data before generating the graph?","Clean Data?",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
                 //Provides a yes or no message box asking the user if they want the data to be cleaned
-                if (result == DialogResult.Yes) //If the user clicks yes
+                if (result == DialogResult.Yes) //If the user selects yes
                 {
                     var points = CleanData(); //Data is cleaned using the CleanData() method
                     GraphForm graph = new GraphForm(points); //The graph is generated with the cleaned points
                     graph.Show();
                 }
-                else //If no data is not cleaned and a graph is generated
+                else //If the user selects no
                 {
-                    
-                    GraphForm graph = new GraphForm(pts);
-                    graph.Show();
+                    GraphForm graph = new GraphForm(pts); //Data is passed without being cleaned
+                    graph.Show(); //It is then shown
                 }
             }
-
             else
             {
                 MessageBox.Show("Please enter at least 2 datapoints"); // Must enter at least 2 datapoints for the graph to be generated
+                // It is not possible to create a graph with only one datapoints
             }
 
 

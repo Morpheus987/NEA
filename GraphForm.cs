@@ -319,64 +319,66 @@ namespace NEA
         }
 
 
-        private (double a, double b, double c) Solve3x3(double[,] m, double[] c)
-        {
+        private (double a, double b, double c) Solve3x3(double[,] m, double[] c) //Method used Cramer's rule to output the coefficients of a quadratic curve
+        {//The matrix is passed in as a 2d array and the constants a 1d array
             double det =
-                m[0, 0] * (m[1, 1] * m[2, 2] - m[1, 2] * m[2, 1]) -
-                m[0, 1] * (m[1, 0] * m[2, 2] - m[1, 2] * m[2, 0]) +
+                m[0, 0] * (m[1, 1] * m[2, 2] - m[1, 2] * m[2, 1]) - //Finds the determinant of the  normal matrix
+                m[0, 1] * (m[1, 0] * m[2, 2] - m[1, 2] * m[2, 0]) + //This is then used to divide the determinants of the other matrix
                 m[0, 2] * (m[1, 0] * m[2, 1] - m[1, 1] * m[2, 0]);
 
+            // if y = ax^2 +bx + c
+
             double detA =
-                c[0] * (m[1, 1] * m[2, 2] - m[1, 2] * m[2, 1]) -
-                m[0, 1] * (c[1] * m[2, 2] - m[1, 2] * c[2]) +
-                m[0, 2] * (c[1] * m[2, 1] - m[1, 1] * c[2]);
+               m[0, 0] * (m[1, 1] * c[2] - c[1] * m[2, 1]) -  //Finds the determinant of the matrix needed calculate the a coefficient
+               m[0, 1] * (m[1, 0] * c[2] - c[1] * m[2, 0]) + //The first column of this matrix is swapped with the values of the constants
+               c[0] * (m[1, 0] * m[2, 1] - m[1, 1] * m[2, 0]);
 
             double detB =
-                m[0, 0] * (c[1] * m[2, 2] - m[1, 2] * c[2]) -
-                c[0] * (m[1, 0] * m[2, 2] - m[1, 2] * m[2, 0]) +
+                m[0, 0] * (c[1] * m[2, 2] - m[1, 2] * c[2]) - //Finds the determinant of the matrix needed calculate the b coefficient
+                c[0] * (m[1, 0] * m[2, 2] - m[1, 2] * m[2, 0]) + //The second column of this matrix is swapped with the values of the constants
                 m[0, 2] * (m[1, 0] * c[2] - c[1] * m[2, 0]);
 
             double detC =
-                m[0, 0] * (m[1, 1] * c[2] - c[1] * m[2, 1]) -
-                m[0, 1] * (m[1, 0] * c[2] - c[1] * m[2, 0]) +
-                c[0] * (m[1, 0] * m[2, 1] - m[1, 1] * m[2, 0]);
+                c[0] * (m[1, 1] * m[2, 2] - m[1, 2] * m[2, 1]) - //Finds the determinant of the matrix needed to calculate the intercept 
+                m[0, 1] * (c[1] * m[2, 2] - m[1, 2] * c[2]) + //The third column of this matrix is swapped with the values of the constants
+                m[0, 2] * (c[1] * m[2, 1] - m[1, 1] * c[2]);
 
-            return (detC / det, detB / det, detA / det);
+            return (detA / det, detB / det, detC / det);
+
+            // returns a, b and c
         }
 
         private (double a, double b, double c) QuadraticRegression(List<DataPointXY> points)
         {
-            int n = points.Count;
 
-            double sumX = 0, sumX2 = 0, sumX3 = 0, sumX4 = 0;
-            double sumY = 0, sumXY = 0, sumX2Y = 0;
+            int n = points.Count; //Stores the total number of points in the list
+            double sumX = 0, sumX2 = 0, sumX3 = 0, sumX4 = 0;//Every summation needed to form the 3x3 matrix
+            double sumY = 0, sumXY = 0, sumX2Y = 0; //all initially set to 0
 
             foreach (var p in points)
             {
-                double x = p.X;
-                double y = p.Y;
+                double x = p.X; //Stores the x value of the point
+                double y = p.Y; //Stores the y values of the point
+                double x2 = x * x; //Stores x squared value
 
-                double x2 = x * x;
-
-                sumX += x;
-                sumX2 += x2;
-                sumX3 += x2 * x;
-                sumX4 += x2 * x2;
-
-                sumY += y;
-                sumXY += x * y;
-                sumX2Y += x2 * y;
+                sumX += x; //Finds the sum of the x value
+                sumX2 += x2;//Finds the sum of the x squared value
+                sumX3 += x2 * x; //Finds the sum of the x cubed value
+                sumX4 += x2 * x2;//Finds the sum of the x to the power of 4
+                sumY += y; //Finds the sum of the y value
+                sumXY += x * y;//Finds the sum of the x * y value
+                sumX2Y += x2 * y;//Finds the sum of the x squared * y value
             }
 
-            // Solve system using Cramer's Rule
+            // 2d array is used to represent the matrix
             double[,] matrix =
-            {{ n,     sumX,   sumX2 },
-             { sumX,  sumX2,  sumX3 },
+            {{ n,     sumX,   sumX2 }, //Each value is put into the correct place to represent
+             { sumX,  sumX2,  sumX3 }, // the system of 3 simultaneous equations
              { sumX2, sumX3,  sumX4 }};
 
-            double[] constants = { sumY, sumXY, sumX2Y };
+            double[] constants = { sumY, sumXY, sumX2Y };//Created an array of constants needed for Cramer's rule
 
-            return Solve3x3(matrix, constants);
+            return Solve3x3(matrix, constants); //Solve3x3 matrix uses Cramer's rule
         }
 
         private double[] PolynomialRegression(List<DataPointXY> points, int degree)
