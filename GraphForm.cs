@@ -80,11 +80,11 @@ namespace NEA
             graph.Cursor = Cursors.Hand; //Changes the cursor to a cross so it is easier for the user to pinpoints parts of the graph
             graph.GetToolTipText += chart1_GetToolTipText; 
             //Adds all these graph editing options to the combo box
-            comboEditOptions.Items.Add("Change X Axis Title"); 
-            comboEditOptions.Items.Add("Change Y Axis Title");
-            comboEditOptions.Items.Add("Change Background Colour");
-            comboEditOptions.Items.Add("Change Regression Line Colour");
-            comboEditOptions.Items.Add("Change Point Colour");
+            comboEditOptions.Items.Add("Change X Axis Title"); //Adds the ability to change the x-axis name
+            comboEditOptions.Items.Add("Change Y Axis Title"); //Adds the ability to change the y-axis name
+            comboEditOptions.Items.Add("Change Background Colour"); //Adds the ability to change the background colour
+            comboEditOptions.Items.Add("Change Regression Line Colour"); //Adds the ability to change the line of best fit colour
+            comboEditOptions.Items.Add("Change Point Colour"); //Adds the ability to change the colour of the point
 
             comboEditOptions.SelectedIndex = 0; //Defaults to showing the first option
 
@@ -106,27 +106,7 @@ namespace NEA
 
         private void btnapplyedit_Click(object sender, EventArgs e) //When the apply edit button is pressed
         {
-            string selectedOption = comboEditOptions.SelectedItem.ToString();
-
-            int maxDegree = 3; // linear, quadratic, cubic
-
-            double bestR2 = double.MinValue;
-            double[] bestCoeffs = null;
-            int bestDegree = 1;
-
-            for (int d = 1; d <= maxDegree; d++)
-            {
-                var coeffs = PolynomialRegression(_points, d);
-                double r2 = CalculateRSquared(_points, coeffs);
-
-                if (r2 > bestR2)
-                {
-                    bestR2 = r2;
-                    bestCoeffs = coeffs;
-                    bestDegree = d;
-                }
-            }
-
+            string selectedOption = comboEditOptions.SelectedItem.ToString(); //Stores the option of the combo box currently selected
 
             switch (selectedOption) // I used a switch case for each option in the combo box
             {
@@ -139,22 +119,22 @@ namespace NEA
                     break;
 
                 case "Change Background Colour":
-                    if (colorDialog1.ShowDialog() == DialogResult.OK)
+                    if (colourChange.ShowDialog() == DialogResult.OK)
                     {
-                        graph.ChartAreas[0].BackColor = colorDialog1.Color; //Changes the background colour of the graph
+                        graph.ChartAreas[0].BackColor = colourChange.Color; //Changes the background colour of the graph
                     }  // Opens a colour dialog which is just a selectiion of colours the user can select
                     break;
 
                 case "Change Regression Line Colour":
-                    if (colorDialog1.ShowDialog() == DialogResult.OK)
+                    if (colourChange.ShowDialog() == DialogResult.OK)
                     {
-                        graph.Series[$"Degree {bestDegree}"].Color = colorDialog1.Color; //The regression line colour is changed
+                        graph.Series["X vs Y"].Color = colourChange.Color; //The regression line colour is changed
                     }
                     break;
                 case "Change Point Colour":
-                    if (colorDialog1.ShowDialog() == DialogResult.OK)
+                    if (colourChange.ShowDialog() == DialogResult.OK)
                     {
-                        graph.Series["Data"].MarkerColor = colorDialog1.Color;
+                        graph.Series["Data"].MarkerColor = colourChange.Color;//The colours of the data points are changed
                     }
                     break;
             }
