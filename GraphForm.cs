@@ -28,7 +28,7 @@ namespace NEA
 
             _points = points; // Stores the inputted values of the user in the new list
             _points = _points.OrderBy(p => p.X).ToList(); // These values are then ordered by size
-            PlotQuadraticGraph(); // A graph is generated
+            PlotGraph(); // A graph is generated
             
             originalFormSize = this.Size;
             foreach (Control c in this.Controls)  // Resize function
@@ -36,9 +36,6 @@ namespace NEA
                 controlBounds[c] = new Rectangle(c.Location, c.Size); 
             }
             ready = true;
-
-        //    var (m, intercept) = LinearRegression(_points); // Applies the linear regression algorithm on the data
-        //    labelEquation.Text = ($"y = {m:F3}x + {intercept:F3}"); //Displays the linear equation produced
 
         }
 
@@ -95,7 +92,7 @@ namespace NEA
         {
             var hit = graph.HitTest(e.X, e.Y); //Determines if there is an element of the chart where the cursor is
 
-            if (hit.PointIndex >= 0 && hit.Series != null)
+            if (hit.PointIndex >= 0 && hit.Series != null) //PointIndex represents the index of the datapoint
             {
                 double x = hit.Series.Points[hit.PointIndex].XValue; //Retrieves the x value of the point
                 double y = hit.Series.Points[hit.PointIndex].YValues[0];//Retrieves the y value of the point
@@ -152,103 +149,73 @@ namespace NEA
 
         private void PlotGraph()
         {
-            
+            int maxDegree = 4; // linear, quadratic, cubic and quartic
 
-            int maxDegree = 3; // linear, quadratic, cubic
+            double bestR2 = double.MinValue; //Initally the r squared value is set to the smallest value because nothing is smaller
+            double[] bestCoeffs = null; //An array storing the coefficients of the model which are going to be used
+            int bestDegree = 1; //Set the best degree to 1 a linear graph you can't go any lower
 
-            double bestR2 = double.MinValue;
-            double[] bestCoeffs = null;
-            int bestDegree = 1;
-
-            for (int d = 1; d <= maxDegree; d++)
+            for (int d = 1; d <= maxDegree; d++) //Iterates through each degree of polynomial until a quartic
             {
-                var coeffs = PolynomialRegression(_points, d);
-                double r2 = CalculateRSquared(_points, coeffs);
+                var coeffs = PolynomialRegression(_points, d); //Evalues what the coefficients of the model for the line of best fit would be
+                double r2 = CalculateRSquared(_points, coeffs); //Evalutes what the R Squared value is
 
-                if (r2 > bestR2)
+                if (r2 > bestR2) //if R squared is greater than the best so far
                 {
-                    bestR2 = r2;
-                    bestCoeffs = coeffs;
-                    bestDegree = d;
+                    bestR2 = r2; //This R Squared value is updated for comparisons for other models
+                    bestCoeffs = coeffs; //The coefficients for the most appropriate model for the line of best fit is stored
+                    bestDegree = d; //Stores the value of the degree of polynomial for the most appropriate line of best fit
                 }
             }
 
-
             graph.Series.Clear(); //Clears the chart because it already loads with stuff
 
-            var area = graph.ChartAreas[0];
+            Series Series = new Series("X vs Y");//Creates a new instance of the series class called X vs Y 
+            Series.ChartType = SeriesChartType.Line; //Creates a line graph instead of the default bar chart
+            Series.BorderWidth = 2; //Sets the width of the line generated
+            Series.Color = Color.Black;//Sets the intial colour of the line to black to differentiate from the points
+            double minX = _points.Min(p => p.X); //Stores the minimum x value in the inputted user data
+            double maxX = _points.Max(p => p.X); //Stores the maximum x value in the inputted user data
+
+            Series dataSeries = new Series("Data"); //This is to display the points
+            dataSeries.ChartType = SeriesChartType.Point;
+            dataSeries.MarkerStyle = MarkerStyle.Circle; //Displayed as circles
+            dataSeries.MarkerSize = 10; //Originally size 10
+            dataSeries.MarkerColor = Color.Red; //Sets the colour as red
+
+            int steps = 1000;// Generates a smooth curve
+            double stepSize = (maxX - minX) / steps; //Stores the interval between each x point
+
+            for (double x = minX; x <= maxX; x += stepSize) 
+            {
+                double y = 0; //Will store the value of the corresponding y value
+                for (int i = 0; i < bestCoeffs.Length; i++)
+                {
+                    y += bestCoeffs[i] * Math.Pow(x, i);
+                    //Calculates the y value of the point similar to the way used in the R Squared method
+                }
+
+                Series.Points.AddXY(x, y); //Adds the point to the series of the line of best fit
+            }
+
+            foreach (var p in _points) //Iterates through the user inputted data
+            {
+                int index = dataSeries.Points.AddXY(p.X, p.Y); //Adds each point to the series
+                dataSeries.Points[index].ToolTip = $"X = {p.X:F2}\nY = {p.Y:F2}"; //Adds the tool tip to each point
+            }
+
+            graph.Series.Add(Series); //Adds the line to the chart
+            graph.Series.Add(dataSeries);//Adds the points to the chart
+
+            var area = graph.ChartAreas[0];//Stores the properties of the area of the graph
             area.AxisX.Title = "X"; //Names the x-axis
             area.AxisY.Title = "Y"; //Names the y-axis
             area.AxisX.MajorGrid.Enabled = false; //Removes the x-axis gridline
             area.AxisY.MajorGrid.Enabled = false; //Removes the y-axis gridlines
 
-            if (_points.Count >= 2)
-            {
-                var (m, c) = LinearRegression(_points); 
+            MessageBox.Show($"Best model: Degree {bestDegree}\nR² = {bestR2:F4}"); 
+            //Outputs a message box of the degree of polynomial of the lines of best fit and the R Squared value 
 
-                Series dataSeries = new Series("Data"); //This is to display the points
-                dataSeries.ChartType = SeriesChartType.Point;
-                dataSeries.MarkerStyle = MarkerStyle.Circle; //Displayed as circles
-                dataSeries.MarkerSize = 10; //Originally size 10
-                dataSeries.MarkerColor = Color.Red; //Sets the colour as red
-
-                foreach (var p in _points)
-                {
-                    int index = dataSeries.Points.AddXY(p.X, p.Y); //Adds each point to the series
-                    dataSeries.Points[index].ToolTip = $"X = {p.X:F2}\nY = {p.Y:F2}"; //Adds the tool tip to each point
-                }
-
-                graph.Series.Add(dataSeries);
-
-
-                //  Series regressionSeries = new Series("Regression"); 
-                //  regressionSeries.ChartType = SeriesChartType.Line;
-                //  regressionSeries.BorderWidth = 2; //Sets the width as 2
-                //  regressionSeries.Color = Color.Blue; //Sets the colour as blue
-
-                //  double minx = _points.Min(p => p.X); //Finds the minimum x value
-                //  double maxx = _points.Max(p => p.X); //Finds the minimum y value
-
-                //  regressionSeries.Points.AddXY(minx, m * minx + c);  //Adds the smallest point
-                //  regressionSeries.Points.AddXY(maxx, m * maxx + c);  //Adds the largest point
-
-                //  chart1.Series.Add(regressionSeries); //Plots the regression line
-
-                //Plots a straight line between the points
-
-                Series bestSeries = new Series($"Degree {bestDegree}");
-                bestSeries.ChartType = SeriesChartType.Line;
-                bestSeries.BorderWidth = 2;
-                bestSeries.Color = Color.Black;
-
-                double minX = _points.Min(p => p.X);
-                double maxX = _points.Max(p => p.X);
-
-                int steps = 150;
-                double stepSize = (maxX - minX) / steps;
-
-                for (double x = minX; x <= maxX; x += stepSize)
-                {
-                    double y = 0;
-                    for (int i = 0; i < bestCoeffs.Length; i++)
-                        y += bestCoeffs[i] * Math.Pow(x, i);
-
-                    bestSeries.Points.AddXY(x, y);
-                }
-
-                graph.Series.Add(bestSeries);
-                
-
-                
-
-                area.AxisX.Minimum = Math.Floor(_points.Min(p => p.X));
-                area.AxisX.Maximum = Math.Ceiling(_points.Max(p => p.X));
-
-              //  area.AxisX.Interval = 5;
-               // area.AxisX.LabelStyle.Format = "0";
-
-                MessageBox.Show($"Best model: Degree {bestDegree}\nR² = {bestR2:F4}");
-            }
         }
 
         private void PlotQuadraticGraph()
@@ -360,73 +327,94 @@ namespace NEA
             return Solve3x3(matrix, constants); //Solve3x3 matrix uses Cramer's rule
         }
 
-        private double[] PolynomialRegression(List<DataPointXY> points, int degree)
+        private double[] PolynomialRegression(List<DataPointXY> points, int degree) 
         {
-            int n = degree + 1;
-            double[,] matrix = new double[n, n];
-            double[] constants = new double[n];
+            int n = degree + 1; //Sets up the degree of the polynomial + 1 simultaneous equations
+            double[,] matrix = new double[n, n]; //Uses a 2d array of type double to represent the matrix
+            double[] constants = new double[n]; //Uses a normal array to set up the constants
 
-            for (int row = 0; row < n; row++)
+            for (int row = 0; row < n; row++) //Iterates through each row of the matrix
             {
-                for (int col = 0; col < n; col++)
+                for (int col = 0; col < n; col++) //Iterates through each column of the matrix
                 {
-                    matrix[row, col] = points.Sum(p => Math.Pow(p.X, row + col));
-                }
+                    matrix[row, col] = points.Sum(p => Math.Pow(p.X, row + col));  //Stores the sum of ∑x^row + column
+                }// Adds the appropriate summation of the x values in the right place of the matrix
+                //EG: The upper left corner will store the sum of ∑x^0 the position to the right will store ∑x^1
 
-                constants[row] = points.Sum(p => p.Y * Math.Pow(p.X, row));
+
+                constants[row] = points.Sum(p => p.Y * Math.Pow(p.X, row)); //Stores the sum of ∑y * x^row
+                //Sets up the constants 
+                //EF
             }
 
             return GaussianElimination(matrix, constants);
+            //Sets up the matrix and array of constants needed for the Gauss-Jord elimination method
         }
 
         private double[] GaussianElimination(double[,] A, double[] b)
         {
-            int n = b.Length;
+            // A = coefficient matrix
+            // b = constants vector
+            // Solves Ax = b using Gauss-Jordan elimination
+            int n = b.Length; // Number of unknowns (matrix size)
 
             for (int i = 0; i < n; i++)
             {
-                // Pivot
+                // The diagonal element A[i,i] is the pivot.
+                // We divide the entire row by the pivot value
+                // so that the pivot becomes 1.
                 double diag = A[i, i];
                 for (int j = 0; j < n; j++)
-                    A[i, j] /= diag;
+                    A[i, j] /= diag; // Scale entire row
 
-                b[i] /= diag;
+                b[i] /= diag; // Scale corresponding constant
 
-                // Eliminate
+                // Make all other values in column i equal to 0.
+                // This transforms the matrix into reduced row echelon form.
                 for (int k = 0; k < n; k++)
                 {
-                    if (k == i) continue;
+                    if (k == i) continue;  // Skip the pivot row
 
                     double factor = A[k, i];
-
+                    // Subtract factor × pivot row from current row
                     for (int j = 0; j < n; j++)
                         A[k, j] -= factor * A[i, j];
-
+                    // Apply same transformation to constants vector
                     b[k] -= factor * b[i];
                 }
             }
+            // At this point:
+            // Matrix A has become the identity matrix
+            // Vector b now contains the solution
 
-            return b;
+            return b; // These are the regression coefficients
         }
+
 
         private double CalculateRSquared(List<DataPointXY> points, double[] coeffs)
         {
-            double meanY = points.Average(p => p.Y);
+            //the datapoints is passed as an argument
+            //the array of coefficients of the predicted model is passed in as an argument
+            double meanY = points.Average(p => p.Y); //Finds the mean of the y values
 
-            double ssTot = 0;
-            double ssRes = 0;
+            double ssTot = 0; //Stores the total variation
+            double ssRes = 0; //Stores the unexpected variation
 
-            foreach (var p in points)
+            foreach (var p in points) //Iterates through every point in the user entered data
             {
-                double predicted = 0;
-                for (int i = 0; i < coeffs.Length; i++)
+                double predicted = 0; //Stores the model's y value
+                for (int i = 0; i < coeffs.Length; i++)  
+                {
+                    // If y = ax^3 + bx^2 + cx + d the coeffs array would be {d, c, b, a}
                     predicted += coeffs[i] * Math.Pow(p.X, i);
+                    //Raises the x value to the appropriate power and multiplies it by the correct coefficient
+                }
 
-                ssTot += Math.Pow(p.Y - meanY, 2);
-                ssRes += Math.Pow(p.Y - predicted, 2);
+                ssTot += Math.Pow(p.Y - meanY, 2); //Finds the difference between the actual y value and mean and squares it
+                ssRes += Math.Pow(p.Y - predicted, 2);//Finds the difference between the actual y value and the models y value and squares it
             }
 
-            return 1 - (ssRes / ssTot);
+            return 1 - (ssRes / ssTot); //Finds and outputs the R Squared value
         }
 
 
