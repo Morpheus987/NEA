@@ -28,7 +28,7 @@ namespace NEA
 
             _points = points; // Stores the inputted values of the user in the new list
             _points = _points.OrderBy(p => p.X).ToList(); // These values are then ordered by size
-            PlotGraph(); // A graph is generated
+            PlotQuadraticGraph(); // A graph is generated
             
             originalFormSize = this.Size;
             foreach (Control c in this.Controls)  // Resize function
@@ -77,8 +77,8 @@ namespace NEA
 
         private void GraphForm_Load(object sender, EventArgs e)
         {
-            chart1.Cursor = Cursors.Hand; //Changes the cursor to a cross so it is easier for the user to pinpoints parts of the graph
-            chart1.GetToolTipText += chart1_GetToolTipText; 
+            graph.Cursor = Cursors.Hand; //Changes the cursor to a cross so it is easier for the user to pinpoints parts of the graph
+            graph.GetToolTipText += chart1_GetToolTipText; 
             //Adds all these graph editing options to the combo box
             comboEditOptions.Items.Add("Change X Axis Title"); 
             comboEditOptions.Items.Add("Change Y Axis Title");
@@ -93,7 +93,7 @@ namespace NEA
 
         private void chart1_GetToolTipText(object sender, ToolTipEventArgs e)
         {
-            var hit = chart1.HitTest(e.X, e.Y); //Determines if there is an element of the chart where the cursor is
+            var hit = graph.HitTest(e.X, e.Y); //Determines if there is an element of the chart where the cursor is
 
             if (hit.PointIndex >= 0 && hit.Series != null)
             {
@@ -131,30 +131,30 @@ namespace NEA
             switch (selectedOption) // I used a switch case for each option in the combo box
             {
                 case "Change X Axis Title":
-                    chart1.ChartAreas[0].AxisX.Title = txtAxisName.Text; // The name of the axis is changed to the text in the textbox
+                    graph.ChartAreas[0].AxisX.Title = txtAxisName.Text; // The name of the axis is changed to the text in the textbox
                     break; 
 
                 case "Change Y Axis Title":
-                    chart1.ChartAreas[0].AxisY.Title = txtAxisName.Text; // The name of the axis is changed to the text in the textbox
+                    graph.ChartAreas[0].AxisY.Title = txtAxisName.Text; // The name of the axis is changed to the text in the textbox
                     break;
 
                 case "Change Background Colour":
                     if (colorDialog1.ShowDialog() == DialogResult.OK)
                     {
-                        chart1.ChartAreas[0].BackColor = colorDialog1.Color; //Changes the background colour of the graph
+                        graph.ChartAreas[0].BackColor = colorDialog1.Color; //Changes the background colour of the graph
                     }  // Opens a colour dialog which is just a selectiion of colours the user can select
                     break;
 
                 case "Change Regression Line Colour":
                     if (colorDialog1.ShowDialog() == DialogResult.OK)
                     {
-                        chart1.Series[$"Degree {bestDegree}"].Color = colorDialog1.Color; //The regression line colour is changed
+                        graph.Series[$"Degree {bestDegree}"].Color = colorDialog1.Color; //The regression line colour is changed
                     }
                     break;
                 case "Change Point Colour":
                     if (colorDialog1.ShowDialog() == DialogResult.OK)
                     {
-                        chart1.Series["Data"].MarkerColor = colorDialog1.Color;
+                        graph.Series["Data"].MarkerColor = colorDialog1.Color;
                     }
                     break;
             }
@@ -194,9 +194,9 @@ namespace NEA
             }
 
 
-            chart1.Series.Clear(); //Clears the chart because it already loads with stuff
+            graph.Series.Clear(); //Clears the chart because it already loads with stuff
 
-            var area = chart1.ChartAreas[0];
+            var area = graph.ChartAreas[0];
             area.AxisX.Title = "X"; //Names the x-axis
             area.AxisY.Title = "Y"; //Names the y-axis
             area.AxisX.MajorGrid.Enabled = false; //Removes the x-axis gridline
@@ -218,7 +218,7 @@ namespace NEA
                     dataSeries.Points[index].ToolTip = $"X = {p.X:F2}\nY = {p.Y:F2}"; //Adds the tool tip to each point
                 }
 
-                chart1.Series.Add(dataSeries);
+                graph.Series.Add(dataSeries);
 
 
                 //  Series regressionSeries = new Series("Regression"); 
@@ -256,7 +256,7 @@ namespace NEA
                     bestSeries.Points.AddXY(x, y);
                 }
 
-                chart1.Series.Add(bestSeries);
+                graph.Series.Add(bestSeries);
                 
 
                 
@@ -273,13 +273,12 @@ namespace NEA
 
         private void PlotQuadraticGraph()
         {
-            chart1.Series.Clear(); //Clears the chart because it already loads with stuff
+            graph.Series.Clear(); //Clears the chart because it already loads with stuff
 
-            var area = chart1.ChartAreas[0];
-            area.AxisX.Title = "X"; //Names the x-axis
-            area.AxisY.Title = "Y"; //Names the y-axis
-            area.AxisX.MajorGrid.Enabled = false; //Removes the x-axis gridline
-            area.AxisY.MajorGrid.Enabled = false; //Removes the y-axis gridlines
+            Series quadSeries = new Series("X vs Y");//Creates a new series instance of the series class which represents a quadratic curve
+            quadSeries.ChartType = SeriesChartType.Line;//Creates a line graph instead of the default bar chart
+            quadSeries.BorderWidth = 2;//Determines the width of the line generated
+            quadSeries.Color = Color.Black;//Sets the colour of the line to black
 
             Series dataSeries = new Series("Data"); //This is to display the points
             dataSeries.ChartType = SeriesChartType.Point;
@@ -290,31 +289,31 @@ namespace NEA
             foreach (var p in _points)
             {
                 int index = dataSeries.Points.AddXY(p.X, p.Y); //Adds each point to the series
-                dataSeries.Points[index].ToolTip = $"X = {p.X:F2}\nY = {p.Y:F2}"; //Adds the tool tip to each point
             }
 
-            chart1.Series.Add(dataSeries);
 
-            var (a, b, c) = QuadraticRegression(_points);
+            var (a, b, c) = QuadraticRegression(_points); //Outputs the values for the coefficients of the curve
 
-            Series quadSeries = new Series("Quadratic");
-            quadSeries.ChartType = SeriesChartType.Line;
-            quadSeries.BorderWidth = 2;
-            quadSeries.Color = Color.Green;
+            double minX = _points.Min(p => p.X); //Stores the minimum x value in the inputted user data
+            double maxX = _points.Max(p => p.X); //Stores the maximum x value in the inputted user data
 
-            double minX = _points.Min(p => p.X);
-            double maxX = _points.Max(p => p.X);
-
-            int steps = 100; // smooth curve
-            double stepSize = (maxX - minX) / steps;
+            int steps = 1000; // smooth curve
+            double stepSize = (maxX - minX) / steps; //The interval between each x-point
 
             for (double x = minX; x <= maxX; x += stepSize)
             {
-                double y = a * x * x + b * x + c;
-                quadSeries.Points.AddXY(x, y);
+                double y = a * x * x + b * x + c; //Calculated y value of the point
+                quadSeries.Points.AddXY(x, y); //Adding each point to the quadratic series
             }
 
-            chart1.Series.Add(quadSeries);
+            graph.Series.Add(quadSeries);//Adds the quadratic curve to the graph
+            graph.Series.Add(dataSeries); //Adds the data points to the graph
+
+            var area = graph.ChartAreas[0]; //Stores the properties of the area of the graph
+            area.AxisX.Title = "X"; //Names the x-axis
+            area.AxisY.Title = "Y"; //Names the y-axis
+            area.AxisX.MajorGrid.Enabled = false; //Removes the x-axis gridline
+            area.AxisY.MajorGrid.Enabled = false; //Removes the y-axis gridlines
 
         }
 

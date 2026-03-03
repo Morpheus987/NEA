@@ -28,40 +28,40 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            this.graph = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.labelEquation = new System.Windows.Forms.Label();
             this.comboEditOptions = new System.Windows.Forms.ComboBox();
             this.btnapplyedit = new System.Windows.Forms.Button();
             this.txtAxisName = new System.Windows.Forms.TextBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.graph)).BeginInit();
             this.SuspendLayout();
             // 
-            // chart1
+            // graph
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
-            this.chart1.Location = new System.Drawing.Point(12, 94);
-            this.chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chart1.Series.Add(series2);
-            this.chart1.Size = new System.Drawing.Size(1043, 538);
-            this.chart1.TabIndex = 0;
-            this.chart1.Text = "chart1";
+            chartArea1.Name = "ChartArea1";
+            this.graph.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.graph.Legends.Add(legend1);
+            this.graph.Location = new System.Drawing.Point(12, 94);
+            this.graph.Name = "graph";
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.graph.Series.Add(series1);
+            this.graph.Size = new System.Drawing.Size(1043, 538);
+            this.graph.TabIndex = 0;
+            this.graph.Text = "chart1";
             // 
             // labelEquation
             // 
             this.labelEquation.AutoSize = true;
             this.labelEquation.Location = new System.Drawing.Point(941, 185);
             this.labelEquation.Name = "labelEquation";
-            this.labelEquation.Size = new System.Drawing.Size(0, 20);
+            this.labelEquation.Size = new System.Drawing.Size(0, 16);
             this.labelEquation.TabIndex = 1;
             // 
             // comboEditOptions
@@ -101,13 +101,13 @@
             this.Controls.Add(this.btnapplyedit);
             this.Controls.Add(this.comboEditOptions);
             this.Controls.Add(this.labelEquation);
-            this.Controls.Add(this.chart1);
+            this.Controls.Add(this.graph);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "GraphForm";
             this.Text = "GraphForm";
             this.Load += new System.EventHandler(this.GraphForm_Load);
             this.Resize += new System.EventHandler(this.GraphForm_Resize);
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.graph)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -115,7 +115,7 @@
 
         #endregion
 
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart graph;
         private System.Windows.Forms.Label labelEquation;
         private System.Windows.Forms.ComboBox comboEditOptions;
         private System.Windows.Forms.Button btnapplyedit;
