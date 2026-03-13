@@ -103,7 +103,7 @@ namespace NEA
 
             if (is_clearing == true) { return; } //If the restart button occurs the event doesn't
 
-            if (string.IsNullOrEmpty(value)) { return; } // If there is nothing in the grpah return
+            if (string.IsNullOrEmpty(value)) { return; } // If there is nothing in the cell return
 
              
             if (!double.TryParse(e.FormattedValue.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out _))
